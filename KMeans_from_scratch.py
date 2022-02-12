@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from matplotlib import style
+from matplotlib import colors, style
 import numpy as np 
 
 style.use('ggplot')
@@ -10,8 +10,15 @@ X = np.array([
     [5, 8],
     [8,8],
     [1, 0.6],
-    [9,11]
+    [9,11],
+            [1,3],
+            [8,9],
+            [0,3],
+            [5,4],
+            [6,4]
 ])
+
+colors = 10*["g","r","c","b","k"]
 
 # plt.scatter(X[:,0], X[:,1], s=100)
 # plt.show()
@@ -58,4 +65,34 @@ class K_Means:
                 break 
 
     def predict(self, data):
-        pass
+        distances = [np.linalg.norm(data - self.centroids[centroid]) for centroid in self.centroids]
+        classification = distances.index(min(distances))
+
+        return classification
+    
+clf = K_Means()
+clf.fit(X)
+
+for centroid in clf.centroids:
+    plt.scatter(clf.centroids[centroid][0], clf.centroids[centroid][1],
+    marker = 'o', color = 'k', s =100, linewidths=5)
+
+for classification in clf.classifications:
+    color = colors[classification]
+    for featureset in clf.classifications[classification]:
+        plt.scatter(featureset[0], featureset[1], marker = 'x', color = color, s = 50, linewidths=5)
+
+""" unknowns = np.array([
+    [1,3],
+    [8,9],
+    [0,3],
+    [5,4],
+    [6,4]
+])
+
+for unknown in unknowns:
+    classification = clf.predict(unknown)
+    plt.scatter(unknown[0], unknown[1], marker='*', color =  colors[classification],
+        s = 50, linewidths=5)
+ """
+plt.show()
